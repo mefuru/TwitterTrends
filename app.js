@@ -1,5 +1,5 @@
-var keys = require('./keys');
-var request = require('request'); // https://github.com/mikeal/request
+var keys = require('./keys'),
+    request = require('request'); // https://github.com/mikeal/request
 var CONSUMER_KEY = keys.CONSUMER_KEY;
 var CONSUMER_SECRET = keys.CONSUMER_SECRET;
 var BEARER_TOKEN_CREDENTIALS = CONSUMER_KEY + ':' + CONSUMER_SECRET;
@@ -39,7 +39,7 @@ var getLocations = function(key) {
         var locations = body;
         locations.forEach(function(location, index, arr) {
             console.log(location.name, location.woeid);
-            getTrendsForALocation(key, location.woeid);
+            // getTrendsForALocation(key, location.woeid);
         });
         getTrendsForALocation(key, 1);
     });
@@ -57,7 +57,10 @@ var getTrendsForALocation = function(key, woeid) {
         }
     };
     request.get(options, function(err, res, body) {
-        console.log(body);
+        var trends = body[0].trends;
+        trends.forEach(function(trend, index, arr) {
+            console.log(trend.name);
+        });
 
     });
 };
