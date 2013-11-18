@@ -1,5 +1,4 @@
-var keys =require('./keys');
-
+var keys = require('./keys');
 var request = require('request'); // https://github.com/mikeal/request
 var CONSUMER_KEY = keys.CONSUMER_KEY;
 var CONSUMER_SECRET = keys.CONSUMER_SECRET;
@@ -7,7 +6,7 @@ var BEARER_TOKEN_CREDENTIALS = CONSUMER_KEY + ':' + CONSUMER_SECRET;
 var buf = new Buffer(BEARER_TOKEN_CREDENTIALS);
 var BASE_64_ENCODED_TOKEN_CREDENTIALS = 'Basic ' + buf.toString('base64'); // conv to base 64
 
-// params reqd for post req
+
 var url = 'https://api.twitter.com/oauth2/token';
 var options = {
     headers: {
@@ -18,12 +17,14 @@ var options = {
         'grant_type': 'client_credentials'
     }
 };
-
 request.post(url, options, function (err, res, body) {
+    if (err) throw err;
     var bodyObj = JSON.parse(body);
     var key = bodyObj.access_token; // obtain bearer
+    console.log(key);
     getLocations(key);
 });
+
 
 // Obtain an array of location objects for which trending data is available
 var getLocations = function(key) {
@@ -38,9 +39,9 @@ var getLocations = function(key) {
         var locations = body;
         locations.forEach(function(location, index, arr) {
             console.log(location.name, location.woeid);
-            
+            getTrendsForALocation(key, location.woeid);
         });
-        getTrendsForALocation(key, location.woeid);
+        getTrendsForALocation(key, 1);
     });
 };
 
@@ -57,7 +58,6 @@ var getTrendsForALocation = function(key, woeid) {
     };
     request.get(options, function(err, res, body) {
         console.log(body);
-        
+
     });
 };
-
