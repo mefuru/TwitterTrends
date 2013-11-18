@@ -1,6 +1,9 @@
+
+var keys =require('./keys');
+
 var request = require('request'); // https://github.com/mikeal/request
-var CONSUMER_KEY = 
-var CONSUMER_SECRET = 
+var CONSUMER_KEY = keys.CONSUMER_KEY;
+var CONSUMER_SECRET = keys.CONSUMER_SECRET;
 var BEARER_TOKEN_CREDENTIALS = CONSUMER_KEY + ':' + CONSUMER_SECRET;
 var buf = new Buffer(BEARER_TOKEN_CREDENTIALS);
 var BASE_64_ENCODED_TOKEN_CREDENTIALS = 'Basic ' + buf.toString('base64'); // conv to base 64
