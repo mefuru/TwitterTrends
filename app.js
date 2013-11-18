@@ -1,4 +1,3 @@
-
 var keys =require('./keys');
 
 var request = require('request'); // https://github.com/mikeal/request
@@ -23,21 +22,42 @@ var options = {
 request.post(url, options, function (err, res, body) {
     var bodyObj = JSON.parse(body);
     var key = bodyObj.access_token; // obtain bearer
-    var searchURL = 'https://api.twitter.com/1.1/search/tweets.json';
-    var options = { // options for search get request
-        uri: searchURL,
+    getLocations(key);
+});
+
+// Obtain an array of location objects for which trending data is available
+var getLocations = function(key) {
+    var options = {
+        uri: 'https://api.twitter.com/1.1/trends/available.json',
         headers: {
             Authorization: 'Bearer ' + key,
         },
-        qs : {
-            q: 'HackerSchool'    
+        json: true // sets body but to JSON representation of value and adds Content-type: application/json header. Additionally, parses the response body as JSON.
+    };
+    request.get(options, function(err, res, body) {
+        var locations = body;
+        locations.forEach(function(location, index, arr) {
+            console.log(location.name, location.woeid);
+            
+        });
+        getTrendsForALocation(key, location.woeid);
+    });
+};
+
+var getTrendsForALocation = function(key, woeid) {
+    var options = {
+        uri: 'https://api.twitter.com/1.1/trends/place.json',
+        headers: {
+            Authorization: 'Bearer ' + key,
+        },
+        json: true,
+        qs: {
+            id: woeid
         }
     };
     request.get(options, function(err, res, body) {
-        console.log(JSON.parse(body));
+        console.log(body);
+        
     });
-})
-
-
-
+};
 
