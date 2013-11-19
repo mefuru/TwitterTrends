@@ -37,15 +37,31 @@ var getLocations = function(key) {
     };
     request.get(options, function(err, res, body) {
         var locations = body;
+        var USLocations = [];
         locations.forEach(function(location, index, arr) {
-            console.log(location.name, location.woeid);
-            // getTrendsForALocation(key, location.woeid);
+            if (location.country == 'United States') {
+                
+            }
         });
-        getTrendsForALocation(key, 1);
+        var topTrends;
+        getTrendsForALocation(key, 1, function(res) {
+            topTrends = res;
+            console.log(topTrends);
+        });
     });
 };
 
-var getTrendsForALocation = function(key, woeid) {
+var getLongLat = function(woeid) {
+    
+
+};
+
+var getStremData = function() {
+    var longLat = (40.6700, 73.9400); // N then W
+    var uri = 'https://stream.twitter.com/1.1/statuses/filter.json';
+};
+
+var getTrendsForALocation = function(key, woeid, callback) {
     var options = {
         uri: 'https://api.twitter.com/1.1/trends/place.json',
         headers: {
@@ -58,9 +74,12 @@ var getTrendsForALocation = function(key, woeid) {
     };
     request.get(options, function(err, res, body) {
         var trends = body[0].trends;
+        var topTrends = [];
         trends.forEach(function(trend, index, arr) {
-            console.log(trend.name);
+            topTrends.push(trend.name);
+            if (topTrends.length == 10) {
+                callback(topTrends);
+            }
         });
-
     });
 };
